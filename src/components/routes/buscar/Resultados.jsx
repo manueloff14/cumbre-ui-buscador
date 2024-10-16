@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import Link from 'next/link';
 
-export default function Resultados({ initialResults, error }) {
+export default function Resultados({ initialResults, error, query }) {
   const [currentPage, setCurrentPage] = useState(1); // Página actual
   const itemsPerPage = 10; // Número de elementos a mostrar por página
   const observerRef = useRef(); // Referencia para el observador
+  const url_base = "empleo.cumbre.icu"
 
   // Calcular los elementos actuales para mostrar
   const paginatedResults = initialResults.slice(0, currentPage * itemsPerPage);
@@ -57,41 +59,43 @@ export default function Resultados({ initialResults, error }) {
         <>
           <ul>
             {paginatedResults.map((resultado) => (
-              <li key={resultado.id} className="p-4 border-[1px] border-gray-800 rounded-3xl mb-4 hover:bg-gray-900 transition-all duration-200">
-                <div className='flex items-start justify-between'>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-1 flex bg-white rounded-full">
-                      <img
-                        src={optenerIconoEmpresa(resultado.fuente)}
-                        alt="Placeholder"
-                        className="w-[20px] h-[20px] m-1 object-contain"
-                      />
+              <Link href={`https://${url_base}/${resultado.id}?query=${encodeURIComponent(query)}`}>
+                <li key={resultado.id} className="p-4 border-[1px] border-gray-800 rounded-3xl mb-4 hover:bg-gray-900 transition-all duration-200">
+                  <div className='flex items-start justify-between'>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-1 flex bg-white rounded-full">
+                        <img
+                          src={optenerIconoEmpresa(resultado.fuente)}
+                          alt="Placeholder"
+                          className="w-[20px] h-[20px] m-1 object-contain"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-[2px]">
+                        <span className="text-sm font-medium">{obtenerNombreEmpresa(resultado.fuente)}</span>
+                        <span className="text-xs text-gray-500">{resultado.fuente}</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-[2px]">
-                      <span className="text-sm font-medium">{obtenerNombreEmpresa(resultado.fuente)}</span>
-                      <span className="text-xs text-gray-500">{resultado.fuente}</span>
+                    <div>
+                      <button className="p-1 hover:bg-gray-800 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+                          <path d="M24 34A4 4 0 1024 42 4 4 0 1024 34zM24 20A4 4 0 1024 28 4 4 0 1024 20zM24 6A4 4 0 1024 14 4 4 0 1024 6z" fill="white"></path>
+                        </svg>
+                      </button>
                     </div>
                   </div>
                   <div>
-                    <button className="p-1 hover:bg-gray-800 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
-                        <path d="M24 34A4 4 0 1024 42 4 4 0 1024 34zM24 20A4 4 0 1024 28 4 4 0 1024 20zM24 6A4 4 0 1024 14 4 4 0 1024 6z" fill="white"></path>
-                      </svg>
-                    </button>
+                    <h3 className="text-lg font-bold mb-1">{resultado.titulo}</h3>
+                    <div className="text-sm text-gray-400">
+                      <ReactMarkdown>{resultado.miniDescription}</ReactMarkdown>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-1">{resultado.titulo}</h3>
-                  <div className="text-sm text-gray-400">
-                    <ReactMarkdown>{resultado.miniDescription}</ReactMarkdown>
-                  </div>
-                </div>
-              </li>
+                </li>
+              </Link>
             ))}
           </ul>
           {/* Div invisible que será observado */}
           {currentPage * itemsPerPage < initialResults.length && (
-            <div ref={observerRef} className="h-4"></div> 
+            <div ref={observerRef} className="h-4"></div>
           )}
         </>
       ) : (

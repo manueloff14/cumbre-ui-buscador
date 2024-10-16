@@ -57,9 +57,9 @@ export default function BarraLateral({query}) {
                     </svg>
                 </button>
             </div>
-            <div id="cumbre-dice" className="min-h-[100px]">
+            <div id="cumbre-dice" className="min-h-[60px]">
                 {loading ? (
-                    <div className="flex justify-center items-center h-[100px]">
+                    <div className="flex justify-center items-center h-[60px]">
                     <img
                         className="w-[20px]"
                         src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
