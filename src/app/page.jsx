@@ -7,7 +7,7 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <div className="bg-gray-950 text-white h-screen flex flex-col">
+      <div className="text-white h-screen flex flex-col">
         <div className="flex justify-end items-center p-4">
           <div>
             <a href="https://cumbre.icu/ayuda">
