@@ -82,7 +82,7 @@ export default async function Buscar({ searchParams }) {
             <div className="text-sm text-gray-400 hidden md:flex">
               <span>Con ❤️ desde <span className="text-white">Cúcuta</span></span>
             </div>
-            <a href="https://cumbre.icu/ayuda">
+            <a href="https://cumbre.icu/contacto">
               <button className="bg-gradient-to-r from-blue-600 to-pink-600 p-2 px-4 font-bold text-white rounded-full text-sm">
                 Optener Ayuda
               </button>
