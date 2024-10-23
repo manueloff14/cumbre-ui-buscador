@@ -22,7 +22,7 @@ export default async function Buscar({ searchParams }) {
   if (query) {
     try {
       const response = await fetch(
-        `https://buscadorcumbre.pythonanywhere.com/api/buscar/${query}`
+        `https://api.cumbre.icu/buscar/${query}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -34,27 +34,7 @@ export default async function Buscar({ searchParams }) {
       // Guardamos el input corregido
       inputCorregido = Array.isArray(data.input_corregido) ? data.input_corregido : [];
 
-      // Calcular el tiempo de búsqueda
-      const {
-        tiempo_buscar_palabras,
-        tiempo_buscar_sinonimos,
-        tiempo_ram,
-        tiempo_input_corregido,
-      } = data;
-
-      // Convertimos cualquier valor potencialmente no numérico a un número
-      const tiempoPalabras = Number(tiempo_buscar_palabras) || 0;
-      const tiempoSinonimos = Number(tiempo_buscar_sinonimos) || 0;
-      const tiempoRam = Number(tiempo_ram) || 0;
-      const tiempoInputCorregido = Number(tiempo_input_corregido) || 0;
-
-      // Sumamos los tiempos y nos aseguramos de que no sea NaN
-      tiempo_busqueda = (
-        tiempoPalabras +
-        tiempoSinonimos +
-        tiempoRam +
-        tiempoInputCorregido
-      ).toFixed(4);
+      tiempo_busqueda = data.tiempo_busqueda || 0;
     } catch (err) {
       console.error("Error fetching results:", err);
       error = "Por el momento no tenemos vacantes para este trabajo";
@@ -94,7 +74,7 @@ export default async function Buscar({ searchParams }) {
           <div class="search-results w-full lg:w-[80%] mx-auto rounded-lg">
             <div class="my-3">
               <span class="text-sm text-gray-300">
-                Cerca de {initialResults.length} resultados en {tiempo_busqueda} segundos
+                Cerca de {initialResults.length} resultados en {tiempo_busqueda.toFixed(8)} segundos
               </span>
 
               {inputCorregido.length > 0 ? (
