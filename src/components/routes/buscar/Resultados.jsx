@@ -19,6 +19,8 @@ export default function Resultados({ initialResults, error, query }) {
         return 'Elempleo';
       case 'www.computrabajo.com.ec':
         return 'Computrabajo';
+      case 'co.trabajosdiarios.com':
+        return 'Trabajos Diarios';
       default:
         return 'Fuente desconocida';
     }
@@ -30,6 +32,8 @@ export default function Resultados({ initialResults, error, query }) {
         return "https://seeklogo.com/images/E/elempleo_com-logo-55C906ECA9-seeklogo.com.png";
       case 'www.computrabajo.com.ec':
         return "https://seeklogo.com/images/C/computrabajo-logo-556E800004-seeklogo.com.png";
+      case 'co.trabajosdiarios.com':
+        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAP1BMVEUGR4Dx9fhag6lukbL///8APny9z94GR4AFR4AARH/f6PArW42huM2RrMXX4uyAoL1Ab5vI2OQVUoinv9Pl6/LwEGuFAAAACHRSTlOs////////1mqaPp0AAAC7SURBVCiRxdHdDoMgDAVgS6GjUv7U93/WVZ06pvNu2YmGiy+Qk7br/Nd0N6b6U+Q9J2R3oHPcIAfp91T03GC0b0mlQS8NmvamqQAwgx6ThL3Vgr4g5qQoiBjcMPB7Wy0ZSNG4gka/V+NtCLxinIT6UeLa+AMJMkGMlpaXT0gJqFpAd4GSY45IVq5uZoMGy2jjFQrmnPV10zw76JigEKxZ6+775DJWZExztuEfy9Zluflf0g7hMn/BG308Adg7F9ncwhKhAAAAAElFTkSuQmCC";
       default:
         return null;
     }
