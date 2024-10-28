@@ -2,6 +2,7 @@ import Link from "next/link";
 import Buscador from "@/components/routes/buscar/Buscador";
 import Resultados from "@/components/routes/buscar/Resultados";
 import BarraLateral from "@/components/routes/buscar/BarraLateral";
+import Header from "@/components/routes/buscar/Header";
 
 // Este es un componente que usa la nueva sintaxis async/await para hacer fetching de datos en el servidor
 export async function generateMetadata({ searchParams }) {
@@ -44,36 +45,12 @@ export default async function Buscar({ searchParams }) {
   return (
     <>
       <div>
-        <header class="fixed top-0 left-0 w-full py-4 px-6 bg-[#0a0a0a] flex justify-between items-center z-20">
-          <a href="https://buscador.cumbre.icu">
-            <div className="flex items-center gap-2">
-              <img
-                src="/img/cumbre_logo.png"
-                alt="Logo Cumbre"
-                class="w-[110px]"
-              />
-              <span className="w-[2px] h-[15px] bg-white hidden md:flex"></span>
-              <div className="text-gray-300 text-sm hidden md:flex">
-                <span>El buscador de empleos</span>
-              </div>
-            </div>
-          </a>
-          <div className="flex items-center gap-3">
-            <div className="text-sm text-gray-400 hidden md:flex">
-              <span>Con ❤️ desde <span className="text-white">Cúcuta</span></span>
-            </div>
-            <a href="https://cumbre.icu/contacto">
-              <button className="bg-gradient-to-r from-blue-600 to-pink-600 p-2 px-4 font-bold text-white rounded-full text-sm">
-                Optener Ayuda
-              </button>
-            </a>
-          </div>
-        </header>
+        <Header />
         {/* Mostrar resultados */}
         <div class="pt-16 pb-24 px-6">
           <div class="search-results w-full lg:w-[80%] mx-auto rounded-lg">
             <div class="my-3">
-              <span class="text-sm text-gray-300">
+              <span class="text-sm text-gray-600 dark:text-gray-300">
                 Cerca de {initialResults.length} resultados en {tiempo_busqueda.toFixed(8)} segundos
               </span>
 

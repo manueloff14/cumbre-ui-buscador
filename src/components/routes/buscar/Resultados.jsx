@@ -9,6 +9,7 @@ export default function Resultados({ initialResults, error, query }) {
   const itemsPerPage = 10; // Número de elementos a mostrar por página
   const observerRef = useRef(); // Referencia para el observador
   const url_base = "empleo.cumbre.icu"
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Calcular los elementos actuales para mostrar
   const paginatedResults = initialResults.slice(0, currentPage * itemsPerPage);
@@ -57,6 +58,16 @@ export default function Resultados({ initialResults, error, query }) {
     };
   }, [currentPage, initialResults]);
 
+  useEffect(() => {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDarkMode(darkModeMediaQuery.matches);
+
+    const handleChange = (e) => setIsDarkMode(e.matches);
+    darkModeMediaQuery.addEventListener('change', handleChange);
+
+    return () => darkModeMediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   return (
     <>
       {initialResults.length > 0 ? (
@@ -64,10 +75,10 @@ export default function Resultados({ initialResults, error, query }) {
           <ul>
             {paginatedResults.map((resultado) => (
               <Link href={`https://${url_base}/${resultado.id}?query=${encodeURIComponent(query)}`}>
-                <li key={resultado.id} className="p-4 border-[1px] border-gray-800 rounded-3xl mb-4 hover:bg-gray-900 transition-all duration-200">
+                <li key={resultado.id} className="p-4 border-[1px] border-gray-300 dark:border-gray-800 rounded-3xl mb-4 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200">
                   <div className='flex items-start justify-between'>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="p-1 flex bg-white rounded-full">
+                      <div className="p-1 flex bg-gray-200 dark:bg-white rounded-full">
                         <img
                           src={optenerIconoEmpresa(resultado.fuente)}
                           alt="Placeholder"
@@ -80,16 +91,16 @@ export default function Resultados({ initialResults, error, query }) {
                       </div>
                     </div>
                     <div>
-                      <button className="p-1 hover:bg-gray-800 rounded-full">
+                      <button className="p-1 hover:bg-gray-300 dark:hover:bg-gray-800 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
-                          <path d="M24 34A4 4 0 1024 42 4 4 0 1024 34zM24 20A4 4 0 1024 28 4 4 0 1024 20zM24 6A4 4 0 1024 14 4 4 0 1024 6z" fill="white"></path>
+                          <path d="M24 34A4 4 0 1024 42 4 4 0 1024 34zM24 20A4 4 0 1024 28 4 4 0 1024 20zM24 6A4 4 0 1024 14 4 4 0 1024 6z" fill={isDarkMode ? "white" : "black"}></path>
                         </svg>
                       </button>
                     </div>
                   </div>
                   <div>
                     <h3 className="text-lg font-bold mb-1">{resultado.titulo}</h3>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       <ReactMarkdown>{resultado.miniDescription}</ReactMarkdown>
                     </div>
                   </div>
