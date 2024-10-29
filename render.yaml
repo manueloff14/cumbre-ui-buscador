@@ -1,0 +1,16 @@
+# render.yaml
+services:
+  - type: web
+    name: buscador-cumbre-ui
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    repo: https://github.com/manueloff14/cumbre-ui-buscador.git
+    branch: main
+    region: oregon
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+    domains:
+      - buscador.cumbre.icu
