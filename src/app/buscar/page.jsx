@@ -23,7 +23,7 @@ export default async function Buscar({ searchParams }) {
   if (query) {
     try {
       const response = await fetch(
-        `https://api.cumbre.icu/buscar/${query}`
+        `${process.env.SEARCH_API_URL}/buscar/${query}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
