@@ -24,12 +24,7 @@ export default function Buscador({ query }) {
 
     return (
         <div
-            className="fixed bottom-0 left-0 w-full flex flex-col items-center shadow-lg justify-center pb-3 pt-6 px-6 lg:px-0"
-            style={{
-                background: isDarkMode
-                ? 'linear-gradient(to bottom, transparent 5%, black 95%)'
-                : 'linear-gradient(to bottom, transparent 5%, white 95%)',
-            }}
+            className="fixed bottom-0 left-0 w-full flex flex-col items-center shadow-lg justify-center pb-3 pt-6 px-6 lg:px-0 bg-[linear-gradient(to_bottom,transparent_5%,white_95%)] dark:bg-[linear-gradient(to_bottom,transparent_5%,black_95%)]"
         >
             <div className="flex items-center gap-3 my-3 text-sm">
                 <button className="text-white p-2 px-4 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full font-bold border-2 border-white dark:border-gray-950 hover:border-gray-600 dark:hover:border-white transition-all duration-200">

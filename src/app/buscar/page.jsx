@@ -47,10 +47,10 @@ export default async function Buscar({ searchParams }) {
       <div>
         <Header />
         {/* Mostrar resultados */}
-        <div class="pt-16 pb-24 px-6">
-          <div class="search-results w-full lg:w-[80%] mx-auto rounded-lg">
-            <div class="my-3">
-              <span class="text-sm text-gray-600 dark:text-gray-300">
+        <div className="pt-16 pb-24 px-6">
+          <div className="search-results w-full lg:w-[80%] mx-auto rounded-lg">
+            <div className="my-3">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
                 Cerca de {initialResults.length} resultados en {tiempo_busqueda.toFixed(8)} segundos
               </span>
 
@@ -67,21 +67,21 @@ export default async function Buscar({ searchParams }) {
                 ""
               )}
             </div>
-            <div class="flex flex-col lg:flex-row gap-4 items-start">
+            <div className="flex flex-col lg:flex-row gap-4 items-start">
               <div className="w-full lg:hidden">
                 <BarraLateral query={query} />
               </div>
-              <ul class="space-y-6 w-full lg:w-[80%]">
+              <ul className="space-y-6 w-full lg:w-[80%]">
                 <Resultados initialResults={initialResults} error={error} query={query} />
               </ul>
               <div className="hidden lg:flex w-[50%]">
                 <BarraLateral query={query} />
               </div>
             </div>
-            <div class="text-center py-4 pt-6">
+            <div className="text-center py-4 pt-6">
               <button
                 id="load-more"
-                class="bg-gray-500 text-black p-2 px-4 rounded-full text-sm hidden"
+                className="bg-gray-500 text-black p-2 px-4 rounded-full text-sm hidden"
               >
                 Ver más
               </button>

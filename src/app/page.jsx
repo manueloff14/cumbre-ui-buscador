@@ -19,7 +19,13 @@ export default function Home() {
         </div>
 
         <div className="flex-grow flex flex-col justify-center items-center">
-          <Logo />
+          <div className='bg-[url("/img/cumbre_logo_negro.png")] dark:bg-[url("/img/cumbre_logo.png")] bg-cover bg-center w-[130px] h-[40px] mb-5'>
+          </div>
+          {/* <img
+            src={isDarkMode ? "/img/cumbre_logo.png" : "/img/cumbre_logo_negro.png"}
+            alt="Logo Cumbre"
+            className="w-[110px]"
+          /> */}
           <form action="/buscar" className="flex items-center bg-gray-200 dark:bg-gray-900 rounded-full w-[90%] md:w-[50%] border-2 border-transparent dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-200">
             <input
               type="text"
