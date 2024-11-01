@@ -1,17 +1,22 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
+import ChatIcon from "./ChatIcon";
+import SearchIcon from "./SearchIcon";
+import Link from "next/link";
 
-export default function Buscador({ query }) {
-    // Usamos el estado local para manejar el valor del input
+export default function Buscador({ query, iconChat, chatActive, onNewMessage, sessionId, onLoading }) {
     const [inputValue, setInputValue] = useState(query);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
+    useEffect(() => {
+        setInputValue(query); // Actualiza el valor de inputValue si cambia el query de la URL
+    }, [query]);
+
     const handleInputChange = (e) => {
-        setInputValue(e.target.value);  // Actualizamos el valor del input cuando el usuario escribe
+        setInputValue(e.target.value);
     };
 
-    // Detectar si el usuario tiene modo oscuro activado o si la página está en modo oscuro
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         setIsDarkMode(darkModeMediaQuery.matches);
@@ -22,37 +27,78 @@ export default function Buscador({ query }) {
         return () => darkModeMediaQuery.removeEventListener('change', handleChange);
     }, []);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (inputValue.trim() === "") return;
+
+        // Mostrar el mensaje del usuario y limpiar el input
+        onNewMessage({ sender: "user", message: inputValue });
+        setInputValue(""); // Limpia el input inmediatamente
+
+        console.log("Chat Active:", chatActive); // Para depuración
+
+        if (chatActive) {
+            onLoading(true); // Activa el estado de carga en Chat
+
+            try {
+                const response = await fetch("https://data.cumbre.icu/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: inputValue, sessionId }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error en la respuesta de la API");
+                }
+
+                const data = await response.json();
+                onNewMessage({ sender: "bot", message: data.respuesta }); // Mensaje de la API
+            } catch (error) {
+                console.error("Error al enviar la solicitud:", error);
+            } finally {
+                onLoading(false); // Desactiva el estado de carga en Chat
+            }
+        } else {
+            // Redireccionar utilizando window.location.assign
+            window.location.assign(`https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(inputValue)}`);
+        }
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        window.location.assign(`https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(inputValue)}`);
+    };
+
     return (
-        <div
-            className="fixed bottom-0 left-0 w-full flex flex-col items-center shadow-lg justify-center pb-3 pt-6 px-6 lg:px-0 bg-[linear-gradient(to_bottom,transparent_5%,white_95%)] dark:bg-[linear-gradient(to_bottom,transparent_5%,black_95%)]"
-        >
+        <div className="fixed bottom-0 left-0 w-full flex flex-col items-center shadow-lg justify-center pb-3 pt-6 px-6 lg:px-0 bg-[linear-gradient(to_bottom,transparent_5%,white_95%)] dark:bg-[linear-gradient(to_bottom,transparent_5%,black_95%)]">
             <div className="flex items-center gap-3 my-3 text-sm">
-                <button className="text-white p-2 px-4 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full font-bold border-2 border-white dark:border-gray-950 hover:border-gray-600 dark:hover:border-white transition-all duration-200">
-                    Resultados
-                </button>
-                <button className="p-2 px-4 bg-gray-400 dark:bg-gray-800 rounded-full hover:bg-red-400 dark:hover:bg-red-950 transition-all duration-200 cursor-not-allowed">
-                    Chat AI 🔒
-                </button>
+                <Link href={`/buscar?query=${inputValue}`}>
+                    <button className={`${!chatActive ? "bg-gradient-to-r from-blue-500 to-pink-500" : "bg-gray-700"} text-white p-2 px-4 rounded-full font-bold border-2 border-white dark:border-gray-950 hover:border-gray-600 dark:hover:border-white transition-all duration-200`}>
+                        Resultados
+                    </button>
+                </Link>
+
+                <Link href={`/chat?query=${inputValue}`}>
+                    <button className={`${chatActive ? "bg-gradient-to-r from-blue-500 to-pink-500" : "bg-gray-700"} text-white p-2 px-4 rounded-full font-bold border-2 border-white dark:border-gray-950 hover:border-gray-600 dark:hover:border-white transition-all duration-200`}>
+                        Chat AI
+                    </button>
+                </Link>
             </div>
-            <form
-                action="https://buscador.cumbre.icu/buscar"
-                className="w-full lg:w-[50%] flex items-center bg-gray-200 dark:bg-gray-900 rounded-full border-[2px] border-gray-300 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-200"
-            >
+
+            <form onSubmit={chatActive ? handleSubmit : handleSearch} className="w-full lg:w-[50%] flex items-center bg-gray-200 dark:bg-gray-900 rounded-full border-[2px] border-gray-300 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-200">
                 <input
                     name="query"
                     type="text"
-                    value={inputValue}  // Valor controlado por el estado
-                    onChange={handleInputChange}  // Manejador de cambios para permitir edición
-                    placeholder="Buscar empleo por título, empresa o ubicación…"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder={chatActive ? "Escribe una pregunta" : "Buscar empleo en Cumbre"}
                     className="w-full pl-6 pr-2 py-4 bg-transparent text-black dark:text-white border-none focus:outline-none"
                 />
-                <button
-                    className="flex items-center justify-center p-3 m-1 mr-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-700 transition-all duration-200"
-                    type="submit"  
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 30 30">
-                        <path d="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z" fill={isDarkMode ? 'white' : 'black'}></path>
-                    </svg>
+                <button className="flex items-center justify-center p-3 m-1 mr-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-700 transition-all duration-200" type="submit">
+                    {iconChat ? <ChatIcon isDarkMode={isDarkMode} /> : <SearchIcon isDarkMode={isDarkMode} />}
                 </button>
             </form>
         </div>

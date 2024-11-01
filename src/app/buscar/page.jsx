@@ -1,8 +1,8 @@
-import Link from "next/link";
 import Buscador from "@/components/routes/buscar/Buscador";
 import Resultados from "@/components/routes/buscar/Resultados";
 import BarraLateral from "@/components/routes/buscar/BarraLateral";
 import Header from "@/components/routes/buscar/Header";
+import Redirect from "./Redirect";
 
 // Este es un componente que usa la nueva sintaxis async/await para hacer fetching de datos en el servidor
 export async function generateMetadata({ searchParams }) {
@@ -13,7 +13,13 @@ export async function generateMetadata({ searchParams }) {
 }
 
 export default async function Buscar({ searchParams }) {
-  const query = searchParams.query || ''; // Obtener el parámetro "query" de la URL
+  const query = searchParams.query; // Obtener el parámetro "query" de la URL
+
+  // Si no hay query, redirigimos a la página principal
+  if (!query) {
+    return <Redirect />;
+  }
+
   let initialResults = [];
   let error = null;
   let tiempo_busqueda = 0;
