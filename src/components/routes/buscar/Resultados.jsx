@@ -101,7 +101,7 @@ export default function Resultados({ initialResults, error, query }) {
                   <div>
                     <h3 className="text-lg font-bold mb-1">{resultado.titulo}</h3>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      <ReactMarkdown>{resultado.miniDescription}</ReactMarkdown>
+                      <ReactMarkdown>{resultado.descripcion}</ReactMarkdown>
                     </div>
                   </div>
                 </li>
