@@ -1,0 +1,8 @@
+# Ignorar la carpeta node_modules
+node_modules
+
+# Ignorar la carpeta .next
+.next
+
+# Ignorar la carpeta .vscode
+.vscode

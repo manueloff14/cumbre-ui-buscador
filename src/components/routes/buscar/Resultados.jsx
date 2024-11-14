@@ -73,9 +73,9 @@ export default function Resultados({ initialResults, error, query }) {
       {initialResults.length > 0 ? (
         <>
           <ul>
-            {paginatedResults.map((resultado) => (
+            {paginatedResults.map((resultado, index) => (
               <Link href={`https://${url_base}/${resultado.id}?query=${encodeURIComponent(query)}`}>
-                <li key={resultado.id} className="p-4 border-[1px] border-gray-300 dark:border-gray-800 rounded-3xl mb-4 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200">
+                <li key={index} className="p-4 border-[1px] border-gray-300 dark:border-gray-800 rounded-3xl mb-4 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200">
                   <div className='flex items-start justify-between'>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="p-1 flex bg-gray-200 dark:bg-white rounded-full">

@@ -20,22 +20,51 @@ export default async function Buscar({ searchParams }) {
     return <Redirect />;
   }
 
+  const guardarVisita = async ({ query }) => {
+    console.log(`Guardando visita para query: ${query}`); // Log para verificar ejecución
+    try {
+      // Solicitud para obtener la ubicación del usuario (mantiene caché)
+      const locationResponse = await fetch('https://ipapi.co/json/');
+      if (locationResponse.ok) {
+        const locationData = await locationResponse.json();
+        const ip = locationData.ip;
+        const country_name = locationData.country_name;
+        const city = locationData.city;
+        console.log(`Datos de ubicación obtenidos: IP=${ip}, País=${country_name}, Ciudad=${city}`); // Log
+
+        // Solicitud para guardar la visita (sin caché)
+        await fetch(`https://data.cumbre.icu/api/consulta/${ip}/${country_name}/${city}/${query}`, { cache: 'no-store' });
+        console.log('Visita guardada correctamente'); // Log
+      } else {
+        console.warn('No se pudo obtener la ubicación, usando valores predeterminados');
+        // Solicitud para guardar la visita con valores predeterminados (sin caché)
+        await fetch(`https://data.cumbre.icu/api/consulta/0.0.0.0/0/0/${query}`, { cache: 'no-store' });
+      }
+    } catch (error) {
+      console.error("Error al guardar la visita:", error);
+    }
+  };
+
+  // Llama a guardarVisita sin await para no bloquear el renderizado
+  guardarVisita({ query });
+
   let initialResults = [];
   let error = null;
   let tiempo_busqueda = 0;
-  let inputCorregido = [];  // Añadimos una variable para guardar input_corregido
+  let inputCorregido = [];  // Variable para guardar input_corregido
 
-  // Si no hay query, no hacemos la petición
+  // Si hay query, hacemos la petición
   if (query) {
     try {
       const response = await fetch(
-        `${process.env.SEARCH_API_URL}/buscar/${query}`
+        `https://api.cumbre.icu/buscar/${query}`
+        // `${process.env.SEARCH_API_URL}/buscar/${query}`
+        // Nota: No se desactiva el caché aquí
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      // Asegurarse de que initialResults se extraiga correctamente del campo "resultados"
       initialResults = Array.isArray(data.resultados) ? data.resultados : [];
 
       // Guardamos el input corregido
@@ -60,7 +89,7 @@ export default async function Buscar({ searchParams }) {
                 Cerca de {initialResults.length} resultados en {tiempo_busqueda.toFixed(8)} segundos
               </span>
 
-              {inputCorregido.length > 0 ? (
+              {inputCorregido.length > 0 && (
                 <div className="mt-2">
                   <span>
                     Tal vez quisiste buscar:{" "}
@@ -69,8 +98,6 @@ export default async function Buscar({ searchParams }) {
                     </a>
                   </span>
                 </div>
-              ) : (
-                ""
               )}
             </div>
             <div className="flex flex-col lg:flex-row gap-4 items-start">
