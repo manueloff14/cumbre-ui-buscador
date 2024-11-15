@@ -24,7 +24,7 @@ export default async function Buscar({ searchParams }) {
     console.log(`Guardando visita para query: ${query}`); // Log para verificar ejecución
     try {
       // Solicitud para obtener la ubicación del usuario (mantiene caché)
-      const locationResponse = await fetch('https://ipapi.co/json/');
+      const locationResponse = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
       if (locationResponse.ok) {
         const locationData = await locationResponse.json();
         const ip = locationData.ip;
