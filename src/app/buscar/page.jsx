@@ -57,7 +57,7 @@ export default async function Buscar({ searchParams }) {
   if (query) {
     try {
       const response = await fetch(
-        `https://api.cumbre.icu/buscar/${query}`
+        `https://data.cumbre.icu/api/get-results/${query}`
         // `${process.env.SEARCH_API_URL}/buscar/${query}`
         // Nota: No se desactiva el caché aquí
       );
