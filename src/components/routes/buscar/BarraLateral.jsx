@@ -2,13 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Tippy from '@tippyjs/react'; // Importar Tippy
+import 'tippy.js/dist/tippy.css'; // Estilos por defecto de Tippy
 
-export default function BarraLateral({query}) {
-    const [mensaje, setMensaje] = useState(''); // Mensaje completo
-    const [mensajeVisible, setMensajeVisible] = useState(''); // Mensaje que se va mostrando progresivamente
-    const [loading, setLoading] = useState(true); // Estado de carga
-    const [indiceLetra, setIndiceLetra] = useState(0); // Índice de la letra actual
+export default function BarraLateral({ query }) {
+    const [mensaje, setMensaje] = useState('');
+    const [mensajeVisible, setMensajeVisible] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [indiceLetra, setIndiceLetra] = useState(0);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [showModal, setShowModal] = useState(false); // Nuevo estado para el modal
 
     useEffect(() => {
         const obtenerMensajeMotivacional = async () => {
@@ -37,12 +40,11 @@ export default function BarraLateral({query}) {
     }, [query]);
 
     useEffect(() => {
-        // Si ya tenemos un mensaje y el índice no ha alcanzado el final del mensaje
         if (!loading && mensaje && indiceLetra < mensaje.length) {
             const intervalo = setTimeout(() => {
                 setMensajeVisible(mensaje.slice(0, indiceLetra + 1)); // Mostrar una letra más
                 setIndiceLetra(indiceLetra + 1); // Aumentar el índice
-            }, 10); // Retardo de 100 milisegundos por letra
+            }, 10); // Retardo de 10 milisegundos por letra
 
             return () => clearTimeout(intervalo); // Limpiar el intervalo al desmontar
         }
@@ -57,45 +59,68 @@ export default function BarraLateral({query}) {
 
         return () => darkModeMediaQuery.removeEventListener('change', handleChange);
     }, []);
-    
+
+    const handleButtonClick = () => {
+        setShowModal(true);
+    };
+
     return (
-        <div className="w-full min-w-full p-4 rounded-3xl border-[1px] border-gray-300 dark:border-gray-800">
-            <div className="flex items-center justify-between mb-3">
-                <span className="font-semibold text-gray-600 dark:text-gray-400 text-xs">Cumbre dice:</span>
-                <button title="¿Por qué veo esto?">
-                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
-                        <path d="M 24 4 C 12.972066 4 4 12.972074 4 24 C 4 35.027926 12.972066 44 24 44 C 35.027934 44 44 35.027926 44 24 C 44 12.972074 35.027934 4 24 4 z M 24 7 C 33.406615 7 41 14.593391 41 24 C 41 33.406609 33.406615 41 24 41 C 14.593385 41 7 33.406609 7 24 C 7 14.593391 14.593385 7 24 7 z M 24 14 A 2 2 0 0 0 24 18 A 2 2 0 0 0 24 14 z M 23.976562 20.978516 A 1.50015 1.50015 0 0 0 22.5 22.5 L 22.5 33.5 A 1.50015 1.50015 0 1 0 25.5 33.5 L 25.5 22.5 A 1.50015 1.50015 0 0 0 23.976562 20.978516 z" fill={isDarkMode ? "white" : "black"}></path>
-                    </svg>
-                </button>
-            </div>
-            <div id="cumbre-dice" className="min-h-[60px]">
-                {loading ? (
-                    <div className="flex justify-center items-center h-[60px]">
-                    <img
-                        className="w-[20px]"
-                        src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
-                        alt="Cargando..."
-                    />
+        <>
+            <div className="w-full min-w-full p-4 rounded-3xl border-[1px] border-gray-300 dark:border-gray-800 relative">
+                <div className="flex items-center justify-between mb-3">
+                    <span className="font-semibold text-gray-600 dark:text-gray-400 text-xs">Cumbre dice:</span>
+
+                    {/* Botón con tooltip */}
+                    <Tippy content={<span className="font-sans font-bold">¿Por qué veo esto?</span>} arrow={true} theme={isDarkMode ? "dark" : "light"}>
+                        <button onClick={handleButtonClick}>
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+                                <path d="M 24 4 C 12.972066 4 4 12.972074 4 24 C 4 35.027926 12.972066 44 24 44 C 35.027934 44 44 35.027926 44 24 C 44 12.972074 35.027934 4 24 4 z M 24 7 C 33.406615 7 41 14.593391 41 24 C 41 33.406609 33.406615 41 24 41 C 14.593385 41 7 33.406609 7 24 C 7 14.593391 14.593385 7 24 7 z M 24 14 A 2 2 0 0 0 24 18 A 2 2 0 0 0 24 14 z M 23.976562 20.978516 A 1.50015 1.50015 0 0 0 22.5 22.5 L 22.5 33.5 A 1.50015 1.50015 0 1 0 25.5 33.5 L 25.5 22.5 A 1.50015 1.50015 0 0 0 23.976562 20.978516 z" fill={isDarkMode ? "white" : "black"}></path>
+                            </svg>
+                        </button>
+                    </Tippy>
+                </div>
+
+                <div id="cumbre-dice" className="min-h-[60px]">
+                    {loading ? (
+                        <div className="flex justify-center items-center h-[60px]">
+                            <img
+                                className="w-[20px]"
+                                src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
+                                alt="Cargando..."
+                            />
+                        </div>
+                    ) : (
+                        <p>{mensajeVisible}</p>
+                    )}
+                </div>
+
+                <div className="flex items-center justify-between mt-3 pt-2 border-t-[1px] border-gray-300 dark:border-gray-800 text-xs text-gray-400">
+                    <span className="font-semibold text-gray-600 dark:text-gray-400 text-xs">¿Es relevante esta respuesta?</span>
+                    <div className="flex items-center gap-[1px]">
+                        <button className="p-2 rounded-full flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-900 transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 48 48">
+                                <path d="M 15 7 C 8.9424416 7 4 11.942442 4 18 C 4 22.096154 7.0876448 25.952899 10.851562 29.908203 C 14.615481 33.863507 19.248379 37.869472 22.939453 41.560547 A 1.50015 1.50015 0 0 0 25.060547 41.560547 C 28.751621 37.869472 33.384518 33.863507 37.148438 29.908203 C 40.912356 25.952899 44 22.096154 44 18 C 44 11.942442 39.057558 7 33 7 C 29.523564 7 26.496821 8.8664883 24 12.037109 C 21.503179 8.8664883 18.476436 7 15 7 z M 15 10 C 17.928571 10 20.3663 11.558399 22.732422 15.300781 A 1.50015 1.50015 0 0 0 25.267578 15.300781 C 27.6337 11.558399 30.071429 10 33 10 C 37.436442 10 41 13.563558 41 18 C 41 20.403846 38.587644 24.047101 34.976562 27.841797 C 31.68359 31.30221 27.590312 34.917453 24 38.417969 C 20.409688 34.917453 16.31641 31.30221 13.023438 27.841797 C 9.4123552 24.047101 7 20.403846 7 18 C 7 13.563558 10.563558 10 15 10 z" fill={isDarkMode ? "white" : "black"}></path>
+                            </svg>
+                        </button>
                     </div>
-                ) : (
-                    <p>{mensajeVisible}</p>
-                )}
-            </div>
-            <div className="flex items-center justify-between mt-3 pt-2 border-t-[1px] border-gray-300 dark:border-gray-800 text-xs text-gray-400">
-                <span className="font-semibold text-gray-600 dark:text-gray-400 text-xs">¿Es relevante esta respuesta?</span>
-                <div className="flex items-center gap-[1px]">
-                    <button className="p-2 rounded-full hover:bg-gray-900 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
-                            <path d="M 26.886719 3.0234375 C 26.437415 3.0492805 25.990861 3.1581308 25.574219 3.3847656 C 24.740935 3.8380352 24.23601 4.6408958 23.933594 5.484375 A 1.50015 1.50015 0 0 0 23.931641 5.4863281 C 23.856851 5.6965582 23.895729 5.5996163 23.880859 5.6503906 C 23.865989 5.7011646 23.846326 5.768146 23.822266 5.8515625 C 23.774136 6.0183955 23.709041 6.2482122 23.630859 6.5214844 C 23.474496 7.0680287 23.269926 7.787416 23.066406 8.5019531 C 22.659368 9.9310274 22.255859 11.345703 22.255859 11.345703 A 1.50015 1.50015 0 0 0 22.255859 11.349609 C 22.141471 11.755416 22.046189 11.970637 22.005859 12.033203 A 1.50015 1.50015 0 0 0 22.003906 12.037109 C 20.528039 14.338252 18.938262 16.655605 17.394531 19 L 10.5 19 C 8.0324991 19 6 21.032499 6 23.5 L 6 39.5 C 6 41.967501 8.0324991 44 10.5 44 L 14.5 44 C 15.757335 44 16.892811 43.465209 17.712891 42.621094 C 20.020827 43.120886 22.596814 43.674636 24.695312 44.117188 C 25.795053 44.349109 26.761579 44.550006 27.490234 44.697266 C 28.21796 44.844337 28.488997 44.922925 28.96875 44.96875 C 29.276882 44.99849 29.582707 45.013672 29.884766 45.013672 C 34.166546 45.013672 37.951276 42.101357 39.046875 37.871094 C 39.884581 34.63323 41.600002 27.921603 41.607422 27.892578 C 41.746989 27.37849 41.941717 26.687301 41.986328 25.859375 A 1.50015 1.50015 0 0 0 41.986328 25.857422 C 42.082078 24.068723 41.461123 22.328247 40.242188 21.039062 A 1.50015 1.50015 0 0 0 40.242188 21.037109 C 39.003328 19.728222 37.266509 19.003801 35.439453 19 A 1.50015 1.50015 0 0 0 35.435547 19 L 31.466797 19 C 31.818422 17.742495 32.16537 16.527227 32.417969 15.541016 A 1.50015 1.50015 0 0 0 32.417969 15.539062 C 33.021899 13.169223 33.163006 11.052777 32.796875 9.0214844 A 1.50015 1.50015 0 0 0 32.796875 9.0195312 C 32.612962 8.0064557 32.266053 6.5283049 31.216797 5.1679688 C 30.454227 4.1798868 29.406708 3.4604803 28.21875 3.1621094 A 1.50015 1.50015 0 0 0 28.214844 3.1621094 C 27.787706 3.0556602 27.336023 2.9975943 26.886719 3.0234375 z M 27.083984 6.0097656 C 27.153229 6.0089389 27.277677 6.0200946 27.488281 6.0722656 C 28.020323 6.2058951 28.434367 6.4720819 28.841797 7 C 29.43854 7.7736637 29.69161 8.705806 29.845703 9.5546875 C 30.125167 11.106826 30.039576 12.7275 29.511719 14.798828 C 29.151131 16.206389 28.056641 20.09375 28.056641 20.09375 A 1.50015 1.50015 0 0 0 29.5 22 L 35.435547 22 C 36.491612 22.0027 37.39379 22.393048 38.0625 23.099609 C 38.717564 23.792425 39.04448 24.683965 38.990234 25.697266 C 38.966844 26.13134 38.851324 26.59751 38.712891 27.107422 A 1.50015 1.50015 0 0 0 38.707031 27.128906 C 38.707031 27.128906 36.979062 33.886003 36.142578 37.119141 C 35.380177 40.062877 32.818985 42.013672 29.884766 42.013672 C 29.676824 42.013672 29.467681 42.002682 29.257812 41.982422 A 1.50015 1.50015 0 0 0 29.255859 41.982422 C 29.484761 42.004222 28.797548 41.902023 28.083984 41.757812 C 27.370421 41.613604 26.409589 41.412593 25.314453 41.181641 C 23.401221 40.778161 21.082509 40.278628 18.935547 39.814453 C 18.94375 39.705129 19 39.611242 19 39.5 L 19 22.011719 C 20.770748 19.246238 22.705347 16.498683 24.527344 13.658203 L 24.529297 13.65625 C 24.857875 13.14567 25.005183 12.649533 25.142578 12.162109 C 25.143578 12.158509 25.544977 10.748377 25.951172 9.3222656 C 26.154528 8.6083028 26.357942 7.891987 26.513672 7.3476562 C 26.591532 7.0754909 26.658135 6.8463076 26.705078 6.6835938 C 26.728548 6.6022368 26.746996 6.5377315 26.759766 6.4941406 C 26.916091 6.0606215 27.022027 6.0117998 27.007812 6.0195312 C 27.000698 6.0234013 27.014739 6.0105924 27.083984 6.0097656 z M 10.5 22 L 16 22 L 16 39.5 C 16 40.346499 15.346499 41 14.5 41 L 10.5 41 C 9.6535009 41 9 40.346499 9 39.5 L 9 23.5 C 9 22.653501 9.6535009 22 10.5 22 z" fill={isDarkMode ? "white" : "black"}></path>
-                        </svg>
-                    </button>
-                    <button className="p-2 rounded-full hover:bg-gray-900 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48" transform="rotate(180)">
-                            <path d="M 26.886719 3.0234375 C 26.437415 3.0492805 25.990861 3.1581308 25.574219 3.3847656 C 24.740935 3.8380352 24.23601 4.6408958 23.933594 5.484375 A 1.50015 1.50015 0 0 0 23.931641 5.4863281 C 23.856851 5.6965582 23.895729 5.5996163 23.880859 5.6503906 C 23.865989 5.7011646 23.846326 5.768146 23.822266 5.8515625 C 23.774136 6.0183955 23.709041 6.2482122 23.630859 6.5214844 C 23.474496 7.0680287 23.269926 7.787416 23.066406 8.5019531 C 22.659368 9.9310274 22.255859 11.345703 22.255859 11.345703 A 1.50015 1.50015 0 0 0 22.255859 11.349609 C 22.141471 11.755416 22.046189 11.970637 22.005859 12.033203 A 1.50015 1.50015 0 0 0 22.003906 12.037109 C 20.528039 14.338252 18.938262 16.655605 17.394531 19 L 10.5 19 C 8.0324991 19 6 21.032499 6 23.5 L 6 39.5 C 6 41.967501 8.0324991 44 10.5 44 L 14.5 44 C 15.757335 44 16.892811 43.465209 17.712891 42.621094 C 20.020827 43.120886 22.596814 43.674636 24.695312 44.117188 C 25.795053 44.349109 26.761579 44.550006 27.490234 44.697266 C 28.21796 44.844337 28.488997 44.922925 28.96875 44.96875 C 29.276882 44.99849 29.582707 45.013672 29.884766 45.013672 C 34.166546 45.013672 37.951276 42.101357 39.046875 37.871094 C 39.884581 34.63323 41.600002 27.921603 41.607422 27.892578 C 41.746989 27.37849 41.941717 26.687301 41.986328 25.859375 A 1.50015 1.50015 0 0 0 41.986328 25.857422 C 42.082078 24.068723 41.461123 22.328247 40.242188 21.039062 A 1.50015 1.50015 0 0 0 40.242188 21.037109 C 39.003328 19.728222 37.266509 19.003801 35.439453 19 A 1.50015 1.50015 0 0 0 35.435547 19 L 31.466797 19 C 31.818422 17.742495 32.16537 16.527227 32.417969 15.541016 A 1.50015 1.50015 0 0 0 32.417969 15.539062 C 33.021899 13.169223 33.163006 11.052777 32.796875 9.0214844 A 1.50015 1.50015 0 0 0 32.796875 9.0195312 C 32.612962 8.0064557 32.266053 6.5283049 31.216797 5.1679688 C 30.454227 4.1798868 29.406708 3.4604803 28.21875 3.1621094 A 1.50015 1.50015 0 0 0 28.214844 3.1621094 C 27.787706 3.0556602 27.336023 2.9975943 26.886719 3.0234375 z M 27.083984 6.0097656 C 27.153229 6.0089389 27.277677 6.0200946 27.488281 6.0722656 C 28.020323 6.2058951 28.434367 6.4720819 28.841797 7 C 29.43854 7.7736637 29.69161 8.705806 29.845703 9.5546875 C 30.125167 11.106826 30.039576 12.7275 29.511719 14.798828 C 29.151131 16.206389 28.056641 20.09375 28.056641 20.09375 A 1.50015 1.50015 0 0 0 29.5 22 L 35.435547 22 C 36.491612 22.0027 37.39379 22.393048 38.0625 23.099609 C 38.717564 23.792425 39.04448 24.683965 38.990234 25.697266 C 38.966844 26.13134 38.851324 26.59751 38.712891 27.107422 A 1.50015 1.50015 0 0 0 38.707031 27.128906 C 38.707031 27.128906 36.979062 33.886003 36.142578 37.119141 C 35.380177 40.062877 32.818985 42.013672 29.884766 42.013672 C 29.676824 42.013672 29.467681 42.002682 29.257812 41.982422 A 1.50015 1.50015 0 0 0 29.255859 41.982422 C 29.484761 42.004222 28.797548 41.902023 28.083984 41.757812 C 27.370421 41.613604 26.409589 41.412593 25.314453 41.181641 C 23.401221 40.778161 21.082509 40.278628 18.935547 39.814453 C 18.94375 39.705129 19 39.611242 19 39.5 L 19 22.011719 C 20.770748 19.246238 22.705347 16.498683 24.527344 13.658203 L 24.529297 13.65625 C 24.857875 13.14567 25.005183 12.649533 25.142578 12.162109 C 25.143578 12.158509 25.544977 10.748377 25.951172 9.3222656 C 26.154528 8.6083028 26.357942 7.891987 26.513672 7.3476562 C 26.591532 7.0754909 26.658135 6.8463076 26.705078 6.6835938 C 26.728548 6.6022368 26.746996 6.5377315 26.759766 6.4941406 C 26.916091 6.0606215 27.022027 6.0117998 27.007812 6.0195312 C 27.000698 6.0234013 27.014739 6.0105924 27.083984 6.0097656 z M 10.5 22 L 16 22 L 16 39.5 C 16 40.346499 15.346499 41 14.5 41 L 10.5 41 C 9.6535009 41 9 40.346499 9 39.5 L 9 23.5 C 9 22.653501 9.6535009 22 10.5 22 z" fill={isDarkMode ? "white" : "black"}></path>
-                        </svg>
-                    </button>
                 </div>
             </div>
-        </div>
-    )
+            {/* Modal */}
+            {showModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20 backdrop-blur-sm">
+                    <div className="shadow-gray-300 dark:shadow-gray-900 shadow-md bg-white dark:bg-gray-950 border border-gray-500 dark:border-gray-700 rounded-3xl p-6 w-11/12 max-w-md relative">
+                        <div className='flex items-center justify-between mb-4'>
+                            <h2 className="text-xl font-semibold">Te explicamos</h2>
+                            <button onClick={() => setShowModal(false)} >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p className='text-sm'>Te presentamos esta frase con el objetivo de inspirarte a explorar nuevas oportunidades laborales. Nuestra filosofía se basa en fomentar un entorno en el que las personas se sientan cómodas y respaldadas al utilizar nuestra plataforma.</p>
+                    </div>
+                </div>
+            )}
+        </>
+    );
 }

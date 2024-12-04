@@ -52,7 +52,7 @@ export default function GuardarVisita({ query }) {
         };
 
         // Ejecutar la función para obtener la ubicación y guardar la visita
-        getLocation();
+        /* getLocation(); */
     }, [query]); // Dependencia: query
 
     return null; // Este componente no renderiza nada en la UI
