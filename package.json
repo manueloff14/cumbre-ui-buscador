@@ -13,10 +13,12 @@
     "@tippyjs/react": "^4.2.6",
     "axios": "^1.7.7",
     "next": "14.2.15",
+    "next-auth": "^4.24.11",
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
     "react-typewriter-effect": "^1.1.0",
+    "react-use": "^17.5.1",
     "react-virtual": "^2.10.4",
     "react-window": "^1.8.10",
     "uuid": "^11.0.2"

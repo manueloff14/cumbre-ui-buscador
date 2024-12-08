@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Logo from "@/components/Logo";
 import BtnSearch from "@/components/BtnSearch";
+import UserTracking from "@/components/UserTracking";
 
 export const metadata = {
   title: "Cumbre Empleos"
@@ -9,6 +10,7 @@ export const metadata = {
 export default function Home() {
   return (
     <>
+      <UserTracking />
       <div className="text-white h-screen flex flex-col">
         <div className="flex justify-end items-center p-4">
           <div>
