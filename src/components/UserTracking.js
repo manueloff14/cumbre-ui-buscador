@@ -117,7 +117,7 @@ export default function UserTracking() {
     // Función para enviar los datos de la sesión a la API
     const sendSessionToApi = async (sessionData) => {
         try {
-            const response = await fetch("http://localhost:5000/api/register-session", {
+            const response = await fetch("https://data.cumbre.icu/api/register-session", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
