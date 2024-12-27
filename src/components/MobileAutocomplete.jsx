@@ -23,7 +23,7 @@ export function AutocompleteMobile({
     const handleInputChangeInternal = (e) => {
         const value = e.target.value;
         setInputValue(value);
-        handleInputChange(e); // Notificar el cambio al componente padre
+        handleInputChange(e);
     };
 
     const handleApplySuggestionInternal = (suggestion) => {
@@ -41,43 +41,34 @@ export function AutocompleteMobile({
 
     const clearInput = () => {
         setInputValue("");
-        handleInputChange({ target: { value: "" } }); // Notificar el cambio al padre
+        handleInputChange({ target: { value: "" } });
     };
 
     return (
-        <div
-            className={`fixed inset-0 top-[60px] bg-[#0a0a0a] z-[9999] flex flex-col pt-4`}
-        >
+        <div className={`fixed inset-0 top-[60px] bg-[#0a0a0a] z-[9999] flex flex-col pt-4`}>
             {/* Input de búsqueda */}
             <div className="sticky top-0 px-4 pb-2 shadow-lg z-[10000] flex items-center">
                 <div className="flex items-center px-3 border-2 border-gray-600 w-full rounded-full bg-gray-800">
-                    {/* Input */}
                     <input
                         type="text"
                         value={inputValue}
                         onChange={handleInputChangeInternal}
                         autoFocus
                         placeholder="Buscar..."
-                        className="flex-grow pl-3 py-3 bg-transparent text-white focus:outline-none w-full"
+                        className="flex-grow pl-3 pr-4 py-3 bg-transparent text-white focus:outline-none w-full"
                     />
-
-                    {/* Separador */}
                     {inputValue && (
                         <>
-                            {/* Botón para limpiar el input */}
                             <button
                                 onClick={clearInput}
-                                className="p-2 rounded-full text-white"
+                                className="p-2 rounded-full text-gray-200"
                                 aria-label="Limpiar input"
                             >
                                 ✕
                             </button>
-
-                            <span className="text-gray-300 ml-2">|</span>
+                            <span className="text-gray-300 ml-1">|</span>
                         </>
                     )}
-
-                    {/* Botón de buscar */}
                     <button
                         onClick={handleSearch}
                         className="p-2 rounded-full text-white"
@@ -86,7 +77,6 @@ export function AutocompleteMobile({
                         🔍
                     </button>
                 </div>
-                {/* Botón para cerrar el panel */}
                 <button
                     onClick={onClose}
                     className="ml-2 p-2 rounded-full text-white"
@@ -118,7 +108,8 @@ export function AutocompleteMobile({
                                 <li
                                     key={index}
                                     className="p-3 rounded-2xl bg-transparent hover:bg-gray-900 cursor-pointer transition flex items-center justify-between"
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.preventDefault();
                                         router.push(
                                             `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(description)}`
                                         );
@@ -137,11 +128,11 @@ export function AutocompleteMobile({
                                         className="p-1 rounded-full hover:bg-gray-700"
                                     >
                                         <svg
-                                            className="rotate-90"
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="20"
                                             height="20"
                                             viewBox="0 0 48 48"
+                                            transform="rotate(-90)"
                                         >
                                             <path
                                                 d="M15.978516 5.9804688a2.0002 2.0002 0 00-1.392578 3.4335937L29.171875 24 14.585938 38.585938a2.0002 2.0002 0 102.828124 2.828124L33.414062 25.414062a2.0002 2.0002 0 000-2.828124L17.414062 6.5859375a2.0002 2.0002 0 00-1.435546-.6054687z"
@@ -160,7 +151,6 @@ export function AutocompleteMobile({
                 </ul>
             </div>
 
-            {/* Estilos para ocultar la barra de desplazamiento */}
             <style jsx>{`
                 .no-scrollbar::-webkit-scrollbar {
                     display: none;
