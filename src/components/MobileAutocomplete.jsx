@@ -11,7 +11,6 @@ export function AutocompleteMobile({
     isMobile,
 }) {
     const [inputValue, setInputValue] = useState(initialQuery);
-    const router = useRouter();
 
     useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -31,14 +30,6 @@ export function AutocompleteMobile({
         handleApplySuggestion(suggestion);
     };
 
-    const handleSearch = () => {
-        if (inputValue.trim() !== "") {
-            router.push(
-                `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(inputValue)}`
-            );
-        }
-    };
-
     const clearInput = () => {
         setInputValue("");
         handleInputChange({ target: { value: "" } });
@@ -55,22 +46,26 @@ export function AutocompleteMobile({
                         onChange={handleInputChangeInternal}
                         autoFocus
                         placeholder="Buscar..."
-                        className="flex-grow pl-3 pr-4 py-3 bg-transparent text-white focus:outline-none w-full"
+                        className="flex-grow pl-3 py-3 bg-transparent text-white focus:outline-none w-full"
                     />
                     {inputValue && (
                         <>
                             <button
                                 onClick={clearInput}
-                                className="p-2 rounded-full text-gray-200"
+                                className="p-2 rounded-full text-white"
                                 aria-label="Limpiar input"
                             >
                                 ✕
                             </button>
-                            <span className="text-gray-300 ml-1">|</span>
+                            <span className="text-gray-300 ml-2">|</span>
                         </>
                     )}
                     <button
-                        onClick={handleSearch}
+                        onClick={() => {
+                            if (inputValue.trim() !== "") {
+                                window.location.href = `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(inputValue)}`;
+                            }
+                        }}
                         className="p-2 rounded-full text-white"
                         aria-label="Buscar"
                     >
@@ -105,27 +100,24 @@ export function AutocompleteMobile({
                             }
 
                             return (
-                                <li
-                                    key={index}
-                                    className="p-3 rounded-2xl bg-transparent hover:bg-gray-900 cursor-pointer transition flex items-center justify-between"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        router.push(
-                                            `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(description)}`
-                                        );
-                                    }}
-                                >
-                                    <span>
-                                        <span className="text-gray-500">{matchText}</span>
-                                        <span className="text-white">{restText}</span>
-                                    </span>
+                                <div key={index} className="relative">
+                                    <a
+                                        href={`https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(description)}`}
+                                        className="block p-3 rounded-2xl bg-transparent hover:bg-gray-900 transition flex items-center justify-between"
+                                    >
+                                        <span>
+                                            <span className="text-gray-500">{matchText}</span>
+                                            <span className="text-white">{restText}</span>
+                                        </span>
+                                    </a>
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
                                             e.stopPropagation();
                                             handleApplySuggestionInternal(suggestion);
                                         }}
-                                        className="p-1 rounded-full hover:bg-gray-700"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-700"
+                                        aria-label="Aplicar sugerencia"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +132,7 @@ export function AutocompleteMobile({
                                             />
                                         </svg>
                                     </button>
-                                </li>
+                                </div>
                             );
                         })
                     ) : (

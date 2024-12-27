@@ -1,4 +1,6 @@
 {
+  "/page": "app/page.js",
   "/buscar/page": "app/buscar/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/api/autocomplete/route": "app/api/autocomplete/route.js"
 }
