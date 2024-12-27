@@ -254,10 +254,13 @@ export default function Buscador({
                                 handleApplySuggestion={handleApplySuggestion}
                                 handleInputChange={handleInputChange}
                                 initialQuery={inputValue}
+                                onClose={() => setShowAutocomplete(false)} // Cerrar el panel
+                                isMobile={isMobile} // Pasar el estado de si es móvil
                             />
                         ) : (
                             <AutocompleteDesktop
                                 suggestions={suggestions}
+                                inputValue={inputValue}
                                 handleSelectSuggestion={handleSelectSuggestion}
                                 handleApplySuggestion={handleApplySuggestion}
                             />

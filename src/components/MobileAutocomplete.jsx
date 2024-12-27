@@ -1,58 +1,175 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function AutocompleteMobile({
-    suggestions,
+    suggestions = [],
     handleSelectSuggestion,
     handleApplySuggestion,
     handleInputChange,
     initialQuery = "",
+    onClose,
+    isMobile,
 }) {
     const [inputValue, setInputValue] = useState(initialQuery);
+    const router = useRouter();
+
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, []);
 
     const handleInputChangeInternal = (e) => {
         const value = e.target.value;
         setInputValue(value);
-        handleInputChange(e); // Llama a la función pasada desde `Buscador`
+        handleInputChange(e); // Notificar el cambio al componente padre
+    };
+
+    const handleApplySuggestionInternal = (suggestion) => {
+        setInputValue(suggestion.description);
+        handleApplySuggestion(suggestion);
+    };
+
+    const handleSearch = () => {
+        if (inputValue.trim() !== "") {
+            router.push(
+                `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(inputValue)}`
+            );
+        }
+    };
+
+    const clearInput = () => {
+        setInputValue("");
+        handleInputChange({ target: { value: "" } }); // Notificar el cambio al padre
     };
 
     return (
         <div
-            className="fixed inset-0 top-[70px] bg-[#0a0a0a] z-[9999] flex flex-col"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className={`fixed inset-0 top-[60px] bg-[#0a0a0a] z-[9999] flex flex-col pt-4`}
         >
             {/* Input de búsqueda */}
-            <div className="sticky top-0 px-4 pb-2 shadow-lg z-[10000]">
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleInputChangeInternal}
-                    autoFocus
-                    placeholder="Buscar..."
-                    className="w-full px-4 p-3 rounded-full bg-gray-800 text-white focus:outline-none border-2 border-gray-600 focus:border-gray-400"
-                />
+            <div className="sticky top-0 px-4 pb-2 shadow-lg z-[10000] flex items-center">
+                <div className="flex items-center px-3 border-2 border-gray-600 w-full rounded-full bg-gray-800">
+                    {/* Input */}
+                    <input
+                        type="text"
+                        value={inputValue}
+                        onChange={handleInputChangeInternal}
+                        autoFocus
+                        placeholder="Buscar..."
+                        className="flex-grow pl-3 py-3 bg-transparent text-white focus:outline-none w-full"
+                    />
+
+                    {/* Separador */}
+                    {inputValue && (
+                        <>
+                            {/* Botón para limpiar el input */}
+                            <button
+                                onClick={clearInput}
+                                className="p-2 rounded-full text-white"
+                                aria-label="Limpiar input"
+                            >
+                                ✕
+                            </button>
+
+                            <span className="text-gray-300 ml-2">|</span>
+                        </>
+                    )}
+
+                    {/* Botón de buscar */}
+                    <button
+                        onClick={handleSearch}
+                        className="p-2 rounded-full text-white"
+                        aria-label="Buscar"
+                    >
+                        🔍
+                    </button>
+                </div>
+                {/* Botón para cerrar el panel */}
+                <button
+                    onClick={onClose}
+                    className="ml-2 p-2 rounded-full text-white"
+                    aria-label="Cerrar panel"
+                >
+                    ✕
+                </button>
             </div>
 
             {/* Lista de sugerencias */}
-            <div className="flex-grow overflow-y-auto p-3">
+            <div className="flex-grow overflow-y-auto p-3 no-scrollbar">
                 <ul className="space-y-3">
                     {suggestions.length > 0 ? (
-                        suggestions.map((suggestion, index) => (
-                            <li
-                                key={index}
-                                className="p-3 rounded-2xl bg-gray-800 hover:bg-gray-700 cursor-pointer transition"
-                                onClick={() => handleSelectSuggestion(suggestion)}
-                            >
-                                <span>{suggestion.description}</span>
-                            </li>
-                        ))
+                        suggestions.map((suggestion, index) => {
+                            const description = suggestion?.description || "";
+
+                            const normalizedInput = inputValue.toLowerCase();
+                            const matchIndex = description.toLowerCase().indexOf(normalizedInput);
+
+                            let matchText = "";
+                            let restText = description;
+
+                            if (matchIndex >= 0) {
+                                matchText = description.substring(0, matchIndex + inputValue.length);
+                                restText = description.substring(matchIndex + inputValue.length);
+                            }
+
+                            return (
+                                <li
+                                    key={index}
+                                    className="p-3 rounded-2xl bg-transparent hover:bg-gray-900 cursor-pointer transition flex items-center justify-between"
+                                    onClick={() => {
+                                        router.push(
+                                            `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(description)}`
+                                        );
+                                    }}
+                                >
+                                    <span>
+                                        <span className="text-gray-500">{matchText}</span>
+                                        <span className="text-white">{restText}</span>
+                                    </span>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleApplySuggestionInternal(suggestion);
+                                        }}
+                                        className="p-1 rounded-full hover:bg-gray-700"
+                                    >
+                                        <svg
+                                            className="rotate-90"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 48 48"
+                                        >
+                                            <path
+                                                d="M15.978516 5.9804688a2.0002 2.0002 0 00-1.392578 3.4335937L29.171875 24 14.585938 38.585938a2.0002 2.0002 0 102.828124 2.828124L33.414062 25.414062a2.0002 2.0002 0 000-2.828124L17.414062 6.5859375a2.0002 2.0002 0 00-1.435546-.6054687z"
+                                                fill="white"
+                                            />
+                                        </svg>
+                                    </button>
+                                </li>
+                            );
+                        })
                     ) : (
-                        // Espacio vacío con un mínimo tamaño para cuando no hay sugerencias
                         <li className="p-3 rounded-2xl bg-gray-800 text-gray-400 text-center">
                             Sin sugerencias de búsqueda
                         </li>
                     )}
                 </ul>
             </div>
+
+            {/* Estilos para ocultar la barra de desplazamiento */}
+            <style jsx>{`
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .no-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
         </div>
     );
 }
