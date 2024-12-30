@@ -55,18 +55,38 @@ export default function Buscador({
         };
     }, []);
 
-    // Cierra el autocomplete al hacer clic fuera
+    // Manejo del estado del hash (#mobile) con popstate
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (inputRef.current && !inputRef.current.contains(event.target)) {
+        const currentUrl = window.location.href.split("#")[0]; // Base de la URL sin hash
+
+        const handlePopState = () => {
+            if (window.location.hash === "#mobile") {
+                setShowAutocomplete(true);
+            } else {
                 setShowAutocomplete(false);
             }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [inputRef]);
+
+        // Escuchar cambios en el historial
+        window.addEventListener("popstate", handlePopState);
+
+        return () => {
+            // Eliminar el listener al desmontar
+            window.removeEventListener("popstate", handlePopState);
+        };
+    }, []);
+
+    // Actualizar URL al mostrar/ocultar autocomplete móvil
+    useEffect(() => {
+        const currentUrl = window.location.href.split("#")[0]; // Base de la URL sin hash
+        if (showAutocomplete && isMobile) {
+            // Agregar `#mobile` al mostrar el autocomplete móvil
+            window.history.pushState(null, "", `${currentUrl}#mobile`);
+        } else if (!showAutocomplete && isMobile) {
+            // Eliminar `#mobile` al ocultar el autocomplete móvil
+            window.history.replaceState(null, "", currentUrl);
+        }
+    }, [showAutocomplete, isMobile]);
 
     // Maneja el cambio de texto en el input
     const handleInputChange = (e) => {
@@ -81,7 +101,6 @@ export default function Buscador({
 
         // Solo hacer fetch si hay texto
         if (value.trim() !== "") {
-            // Esperar 300ms antes de la llamada
             debounceTimer.current = setTimeout(() => {
                 fetchGoogleXMLAutocomplete(value);
             }, 300);
@@ -134,17 +153,6 @@ export default function Buscador({
         }
     };
 
-    // Seleccionar una sugerencia del autocomplete
-    const handleSelectSuggestion = (suggestion) => {
-        setInputValue(suggestion.description);
-    };
-
-    // Aplicar una sugerencia pero seguir mostrando results
-    const handleApplySuggestion = (suggestion) => {
-        setInputValue(suggestion.description);
-        fetchGoogleXMLAutocomplete(suggestion.description);
-    };
-
     // Acción de búsqueda normal
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -163,36 +171,33 @@ export default function Buscador({
         pb-3 pt-6 px-6 lg:px-0 
         bg-[linear-gradient(to_bottom,transparent_5%,white_95%)] 
         dark:bg-[linear-gradient(to_bottom,transparent_5%,black_95%)]
+
       "
         >
             {/* Botones de navegación */}
             <div className="flex items-center gap-3 my-3 text-sm">
                 <Link href={`/buscar?query=${inputValue}`}>
                     <button
-                        className={`
-              ${!chatActive
+                        className={`${!chatActive
                                 ? "bg-gradient-to-r from-blue-500 to-pink-500"
-                                : "bg-gray-700"}
-              text-white p-2 px-4 rounded-full font-bold 
+                                : "bg-gray-700"
+                            } text-white p-2 px-4 rounded-full font-bold 
               border-2 border-white dark:border-gray-950 
               hover:border-gray-600 dark:hover:border-white 
-              transition-all duration-200
-            `}
+              transition-all duration-200`}
                     >
                         Resultados
                     </button>
                 </Link>
                 <Link href={`/chat?query=${inputValue}`}>
                     <button
-                        className={`
-              ${chatActive
+                        className={`${chatActive
                                 ? "bg-gradient-to-r from-blue-500 to-pink-500"
-                                : "bg-gray-700"}
-              text-white p-2 px-4 rounded-full font-bold 
+                                : "bg-gray-700"
+                            } text-white p-2 px-4 rounded-full font-bold 
               border-2 border-white dark:border-gray-950 
               hover:border-gray-600 dark:hover:border-white 
-              transition-all duration-200
-            `}
+              transition-all duration-200`}
                     >
                         Chat AI
                     </button>
@@ -238,10 +243,11 @@ export default function Buscador({
           "
                     type="submit"
                 >
-                    {iconChat
-                        ? <ChatIcon isDarkMode={isDarkMode} />
-                        : <SearchIcon isDarkMode={isDarkMode} />
-                    }
+                    {iconChat ? (
+                        <ChatIcon isDarkMode={isDarkMode} />
+                    ) : (
+                        <SearchIcon isDarkMode={isDarkMode} />
+                    )}
                 </button>
 
                 {/* Autocomplete */}
@@ -250,30 +256,26 @@ export default function Buscador({
                         {isMobile ? (
                             <AutocompleteMobile
                                 suggestions={suggestions}
-                                handleSelectSuggestion={handleSelectSuggestion}
-                                handleApplySuggestion={handleApplySuggestion}
+                                handleSelectSuggestion={(s) => setInputValue(s.description)}
+                                handleApplySuggestion={(s) => setInputValue(s.description)}
                                 handleInputChange={handleInputChange}
                                 initialQuery={inputValue}
-                                onClose={() => setShowAutocomplete(false)} // Cerrar el panel
-                                isMobile={isMobile} // Pasar el estado de si es móvil
+                                onClose={() => setShowAutocomplete(false)}
+                                isMobile={isMobile}
+                                isDarkMode={isDarkMode}
                             />
                         ) : (
                             <AutocompleteDesktop
                                 suggestions={suggestions}
                                 inputValue={inputValue}
-                                handleSelectSuggestion={handleSelectSuggestion}
-                                handleApplySuggestion={handleApplySuggestion}
+                                handleSelectSuggestion={(s) => setInputValue(s.description)}
+                                handleApplySuggestion={(s) => setInputValue(s.description)}
+                                isDarkMode={isDarkMode}
                             />
                         )}
                     </>
                 )}
             </form>
-
-            <style jsx>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
         </div>
     );
 }

@@ -7,6 +7,7 @@ export function AutocompleteDesktop({
     handleSelectSuggestion,
     handleApplySuggestion,
     inputValue = "", // Aseguramos que tenga un valor por defecto
+    isDarkMode
 }) {
     const router = useRouter(); // Hook para redirecciones
 
@@ -19,17 +20,18 @@ export function AutocompleteDesktop({
         no-scrollbar
         absolute bottom-[70px] w-full 
         p-3 rounded-3xl 
-        border-2 border-gray-500
-        bg-gray-950/90 
+        border-2 dark:border-gray-500 border-gray-400
+        dark:bg-gray-950/90
+        bg-gray-100/90 
         backdrop-blur-sm
         h-80
         overflow-y-auto 
         z-50
         shadow-lg
-        shadow-gray-800
+        dark:shadow-gray-800 shadow-gray-300
       "
         >
-            <ul className="w-full text-white space-y-1">
+            <ul className="w-full space-y-1">
                 {suggestions.map((suggestion, index) => {
                     const description = suggestion?.description || ""; // Default a string
                     const normalizedInput = inputValue?.toLowerCase() || ""; // Default a string
@@ -61,7 +63,7 @@ export function AutocompleteDesktop({
                         >
                             {/* Resaltar la coincidencia en negrita */}
                             <span>
-                                <span className="text-gray-500">{matchText}</span>
+                                <span className="text-gray-400 dark:text-gray-500">{matchText}</span>
                                 <span>{restText}</span>
                             </span>
                             <button
@@ -70,10 +72,10 @@ export function AutocompleteDesktop({
                                     e.stopPropagation();
                                     handleApplySuggestion(suggestion);
                                 }}
-                                className="p-1 rounded-full hover:bg-gray-700"
+                                className="p-1 rounded-full hover:bg-gray-400 dark:hover:bg-gray-700"
                             >
-                                <svg className="rotate-90" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
-                                    <path d="M15.978516 5.9804688a2.0002 2.0002 0 00-1.392578 3.4335937L29.171875 24 14.585938 38.585938a2.0002 2.0002 0 102.828124 2.828124L33.414062 25.414062a2.0002 2.0002 0 000-2.828124L17.414062 6.5859375a2.0002 2.0002 0 00-1.435546-.6054687z" fill="white" />
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 24 24">
+                                    <path d="M 19.171875 2 C 18.448125 2 17.724375 2.275625 17.171875 2.828125 L 16 4 L 20 8 L 21.171875 6.828125 C 22.275875 5.724125 22.275875 3.933125 21.171875 2.828125 C 20.619375 2.275625 19.895625 2 19.171875 2 z M 14.5 5.5 L 3 17 L 3 21 L 7 21 L 18.5 9.5 L 14.5 5.5 z" fill={isDarkMode ? "white" : "black"}></path>
                                 </svg>
                             </button>
                         </li>

@@ -21,7 +21,8 @@
     "react-use": "^17.5.1",
     "react-virtual": "^2.10.4",
     "react-window": "^1.8.10",
-    "uuid": "^11.0.2"
+    "uuid": "^11.0.2",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "postcss": "^8",
