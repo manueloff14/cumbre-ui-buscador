@@ -7,7 +7,8 @@ export function AutocompleteDesktop({
     handleSelectSuggestion,
     handleApplySuggestion,
     inputValue = "", // Aseguramos que tenga un valor por defecto
-    isDarkMode
+    isDarkMode,
+    home
 }) {
     const router = useRouter(); // Hook para redirecciones
 
@@ -16,20 +17,20 @@ export function AutocompleteDesktop({
     return (
         <div
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            className="
-        no-scrollbar
-        absolute bottom-[70px] w-full 
-        p-3 rounded-3xl 
-        border-2 dark:border-gray-500 border-gray-400
-        dark:bg-gray-950/90
-        bg-gray-100/90 
-        backdrop-blur-sm
-        h-80
-        overflow-y-auto 
-        z-50
-        shadow-lg
-        dark:shadow-gray-800 shadow-gray-300
-      "
+            className={`
+                no-scrollbar
+                absolute w-full 
+                ${home ? 'top-[70px]' : 'bottom-[70px]'}
+                p-3 rounded-3xl 
+                border-2 dark:border-gray-500 border-gray-400
+                dark:bg-gray-950/90 bg-gray-100/90
+                backdrop-blur-sm
+                ${home ? 'h-44' : 'h-80'}
+                overflow-y-auto 
+                z-50
+                shadow-lg
+                dark:shadow-gray-800 shadow-gray-300
+            `}
         >
             <ul className="w-full space-y-1">
                 {suggestions.map((suggestion, index) => {

@@ -14,6 +14,8 @@ export default function Buscador({
     onNewMessage,
     sessionId,
     onLoading,
+    botones,
+    home
 }) {
     const [inputValue, setInputValue] = useState(query);
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -163,46 +165,38 @@ export default function Buscador({
     };
 
     return (
-        <div
-            className="
-        fixed bottom-0 left-0 w-full 
-        flex flex-col items-center 
-        justify-center shadow-lg 
-        pb-3 pt-6 px-6 lg:px-0 
-        bg-[linear-gradient(to_bottom,transparent_5%,white_95%)] 
-        dark:bg-[linear-gradient(to_bottom,transparent_5%,black_95%)]
-
-      "
-        >
+        <>
             {/* Botones de navegación */}
-            <div className="flex items-center gap-3 my-3 text-sm">
-                <Link href={`/buscar?query=${inputValue}`}>
-                    <button
-                        className={`${!chatActive
+            {botones && (
+                <div className="flex items-center gap-3 my-3 text-sm">
+                    <Link href={`/buscar?query=${encodeURIComponent(inputValue)}`}>
+                        <button
+                            className={`${!chatActive
                                 ? "bg-gradient-to-r from-blue-500 to-pink-500"
                                 : "bg-gray-700"
-                            } text-white p-2 px-4 rounded-full font-bold 
-              border-2 border-white dark:border-gray-950 
-              hover:border-gray-600 dark:hover:border-white 
-              transition-all duration-200`}
-                    >
-                        Resultados
-                    </button>
-                </Link>
-                <Link href={`/chat?query=${inputValue}`}>
-                    <button
-                        className={`${chatActive
+                                } text-white p-2 px-4 rounded-full font-bold 
+                border-2 border-white dark:border-gray-950 
+                hover:border-gray-600 dark:hover:border-white 
+                transition-all duration-200`}
+                        >
+                            Resultados
+                        </button>
+                    </Link>
+                    <Link href={`/chat?query=${encodeURIComponent(inputValue)}`}>
+                        <button
+                            className={`${chatActive
                                 ? "bg-gradient-to-r from-blue-500 to-pink-500"
                                 : "bg-gray-700"
-                            } text-white p-2 px-4 rounded-full font-bold 
-              border-2 border-white dark:border-gray-950 
-              hover:border-gray-600 dark:hover:border-white 
-              transition-all duration-200`}
-                    >
-                        Chat AI
-                    </button>
-                </Link>
-            </div>
+                                } text-white p-2 px-4 rounded-full font-bold 
+                border-2 border-white dark:border-gray-950 
+                hover:border-gray-600 dark:hover:border-white 
+                transition-all duration-200`}
+                        >
+                            Chat AI
+                        </button>
+                    </Link>
+                </div>
+            )}
 
             {/* Formulario de búsqueda */}
             <form
@@ -263,6 +257,7 @@ export default function Buscador({
                                 onClose={() => setShowAutocomplete(false)}
                                 isMobile={isMobile}
                                 isDarkMode={isDarkMode}
+                                home={home}
                             />
                         ) : (
                             <AutocompleteDesktop
@@ -271,11 +266,12 @@ export default function Buscador({
                                 handleSelectSuggestion={(s) => setInputValue(s.description)}
                                 handleApplySuggestion={(s) => setInputValue(s.description)}
                                 isDarkMode={isDarkMode}
+                                home={home}
                             />
                         )}
                     </>
                 )}
             </form>
-        </div>
+        </>
     );
 }

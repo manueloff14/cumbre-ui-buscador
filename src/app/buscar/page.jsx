@@ -29,8 +29,8 @@ export default async function Buscar({ searchParams }) {
   if (query) {
     try {
       const response = await fetch(
-        `https://data.cumbre.icu/api/get-results/${query}`
-        /* `https://data.cumbre.icu/api/get-resultss/${query}` */
+        /* `https://data.cumbre.icu/api/get-results/${query}` */
+        `https://data.cumbre.icu/api/get-resultss/${query}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -92,7 +92,19 @@ export default async function Buscar({ searchParams }) {
             </div>
           </div>
         </div>
-        <Buscador query={query} />
+        <div
+          className="
+        fixed bottom-0 left-0 w-full 
+        flex flex-col items-center 
+        justify-center shadow-lg 
+        pb-3 pt-6 px-6 lg:px-0 
+        bg-[linear-gradient(to_bottom,transparent_5%,white_95%)] 
+        dark:bg-[linear-gradient(to_bottom,transparent_5%,black_95%)]
+
+      "
+        >
+          <Buscador query={query} botones={true} home={false} />
+        </div>
       </div>
     </>
   );

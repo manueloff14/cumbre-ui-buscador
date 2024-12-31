@@ -43,7 +43,14 @@ export function AutocompleteMobile({
     };
 
     return (
-        <div className={`fixed inset-0 top-[60px] bg-white dark:bg-[#0a0a0a] z-[9999] flex flex-col pt-4`}>
+        <div className={`fixed inset-0 top-[0px] bg-white dark:bg-[#0a0a0a] z-[9999] flex flex-col`}>
+            <div className="py-4 px-3 flex items-center justify-between">
+                <div className='bg-[url("/img/cumbre_logo_negro.png")] dark:bg-[url("/img/cumbre_logo.png")] bg-cover bg-center w-[130px] h-[40px]'></div>
+                <a href="https://cumbre.icu/contacto">
+                    <button className="bg-gradient-to-r from-blue-600 to-pink-600 p-2 px-4 font-bold text-white rounded-full text-sm">Obtener Ayuda</button>
+                </a>
+            </div>
+
             {/* Input de búsqueda */}
             <div className="sticky top-0 px-4 pb-2 z-[10000] flex items-center">
                 <div className="flex items-center px-3 border-2 border-gray-200 dark:border-gray-600 w-full rounded-full bg-gray-300 dark:bg-gray-800">
@@ -155,6 +162,6 @@ export function AutocompleteMobile({
                     scrollbar-width: none;
                 }
             `}</style>
-        </div>
+        </div >
     );
 }
