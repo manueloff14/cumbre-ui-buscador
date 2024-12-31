@@ -22,6 +22,24 @@ export default function RootLayout({ children }) {
     <html lang="es">
       <head>
         {/* <script src="https://alwingulla.com/88/tag.min.js" data-zone="117033" async data-cfasync="false"></script> */}
+
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-2T3P3L9NZX"
+        ></script>
+
+        {/* Incluir script inline */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-2T3P3L9NZX');
+            `,
+          }}
+        ></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
