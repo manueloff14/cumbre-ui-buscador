@@ -45,7 +45,7 @@ export function AutocompleteMobile({
     return (
         <div className={`fixed inset-0 top-[0px] bg-white dark:bg-[#0a0a0a] z-[9999] flex flex-col`}>
             <div className="py-4 px-3 flex items-center justify-between">
-                <div className='bg-[url("/img/cumbre_logo_negro.png")] dark:bg-[url("/img/cumbre_logo.png")] bg-cover bg-center w-[130px] h-[40px]'></div>
+                <div className='bg-[url("/img/cumbre_logo_negro.png")] dark:bg-[url("/img/cumbre_logo.png")] bg-cover bg-center w-[100px] h-[30px]'></div>
                 <a href="https://cumbre.icu/contacto">
                     <button className="bg-gradient-to-r from-blue-600 to-pink-600 p-2 px-4 font-bold text-white rounded-full text-sm">Obtener Ayuda</button>
                 </a>

@@ -38,7 +38,9 @@ export default function Home() {
             />
             <BtnSearch />
           </form> */}
-          <Buscador home={true} />
+          <div className="w-[90%] md:w-[100%] flex justify-center">
+            <Buscador home={true} />
+          </div>
           <span className="mt-3 text-gray-600 dark:text-gray-400 text-sm">Encuentra tu empleo ahora con Cumbre</span>
         </div>
 
