@@ -1,9 +1,10 @@
 {
   "pages": {
-    "/page": [
+    "/buscar/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/css/app/buscar/page.css",
+      "static/chunks/app/buscar/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
