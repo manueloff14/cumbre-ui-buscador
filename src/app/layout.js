@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <head>
-        {/* <script src="https://alwingulla.com/88/tag.min.js" data-zone="117033" async data-cfasync="false"></script> */}
+        <script src="https://alwingulla.com/88/tag.min.js" data-zone="117033" async data-cfasync="false"></script>
 
         {/* Google tag (gtag.js) */}
         <script
