@@ -50,7 +50,7 @@ export function AutocompleteDesktop({
 
                     return (
                         <li>
-                            <a href={`https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(description)}`}
+                            <a href={`${process.env.NEXT_PUBLIC_HOST}/buscar?query=${encodeURIComponent(description)}`}
                                 key={index}
                                 className="
               px-3 py-2 flex items-center justify-between 

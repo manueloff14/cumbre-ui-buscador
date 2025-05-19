@@ -160,7 +160,7 @@ export default function Buscador({
         e.preventDefault();
         if (inputValue.trim() === "") return;
         window.location.assign(
-            `https://buscador.cumbre.icu/buscar?query=${encodeURIComponent(inputValue)}`
+            `${process.env.NEXT_PUBLIC_HOST}/buscar?query=${encodeURIComponent(inputValue)}`
         );
     };
 

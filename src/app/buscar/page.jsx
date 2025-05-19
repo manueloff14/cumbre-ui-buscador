@@ -29,7 +29,7 @@ export default async function Buscar({ searchParams }) {
   if (query) {
     try {
       const response = await fetch(
-        `https://data.cumbre.icu/api/get-results/${query}`
+        `${process.env.NEXT_PUBLIC_API_SEARCH}/search?query=${query}&threshold=0.3`
         /* `https://data.cumbre.icu/api/get-resultss/${query}` */
       );
       if (!response.ok) {
