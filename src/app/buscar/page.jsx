@@ -3,6 +3,7 @@ import Resultados from "@/components/routes/buscar/Resultados";
 import BarraLateral from "@/components/routes/buscar/BarraLateral";
 import Header from "@/components/routes/buscar/Header";
 import Redirect from "./Redirect";
+import AnuncioResultados from "@/components/AnuncioResultados";
 
 // Este es un componente que usa la nueva sintaxis async/await para hacer fetching de datos en el servidor
 export async function generateMetadata({ searchParams }) {
@@ -76,6 +77,9 @@ export default async function Buscar({ searchParams }) {
                 <BarraLateral query={query} />
               </div>
               <ul className="space-y-6 w-full lg:w-[80%]">
+                <div>
+                  <AnuncioResultados />
+                </div>
                 <Resultados initialResults={initialResults} error={error} query={query} />
               </ul>
               <div className="hidden lg:flex w-[50%]">

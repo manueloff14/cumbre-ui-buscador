@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import ResultadoItem from './ResultadoItem'; // Asegúrate de ajustar la ruta según tu estructura de carpetas
+import AnuncioItemResultado from '@/components/AnuncioItemResultado';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 
@@ -84,15 +85,23 @@ export default function Resultados({ initialResults, error, query }) {
         <>
           <ul>
             {paginatedResults.map((resultado, index) => (
-              <ResultadoItem
-                key={resultado.id || index} // Usar un ID único si está disponible
-                resultado={resultado}
-                url_base={url_base}
-                query={query}
-                isDarkMode={isDarkMode}
-                obtenerNombreEmpresa={obtenerNombreEmpresa}
-                optenerIconoEmpresa={optenerIconoEmpresa}
-              />
+              <>
+                <ResultadoItem
+                  key={`result-${resultado.id || index}`} // Usar un ID único si está disponible
+                  resultado={resultado}
+                  url_base={url_base}
+                  query={query}
+                  isDarkMode={isDarkMode}
+                  obtenerNombreEmpresa={obtenerNombreEmpresa}
+                  optenerIconoEmpresa={optenerIconoEmpresa}
+                />
+                {/* Insertar un anuncio después de cada 2 resultados */}
+                {(index + 1) % 2 === 0 && index < paginatedResults.length - 1 && (
+                  <li key={`ad-${index}`} className="my-4">
+                    <AnuncioItemResultado />
+                  </li>
+                )}
+              </>
             ))}
           </ul>
           {/* Div invisible que será observado */}

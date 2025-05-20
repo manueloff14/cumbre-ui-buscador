@@ -45,7 +45,7 @@ export default function Home() {
         </div>
 
         <footer className="p-4 flex justify-between items-center w-full text-sm text-black dark:text-white">
-          <div>© Cumbre, 2024</div>
+          <div className="text-xs">© Cumbre, 2024 - {new Date().getFullYear()}. <span className="hidden md:inline">Todos los derechos reservados.</span></div>
           <div>Con ❤️ desde Cúcuta</div>
         </footer>
       </div>
