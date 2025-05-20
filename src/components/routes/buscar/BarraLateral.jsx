@@ -16,7 +16,7 @@ export default function BarraLateral({ query }) {
     useEffect(() => {
         const obtenerMensajeMotivacional = async () => {
             try {
-                const response = await axios.get(`https://buscadorcumbre.pythonanywhere.com/api/mensaje_motivacional/${query}`);
+                const response = await axios.get(`https://apimessagecumbre.pythonanywhere.com/api/mensaje_motivacional/${query}`);
                 const mensajeCompleto = response.data.mensaje;
 
                 if (mensajeCompleto) {
