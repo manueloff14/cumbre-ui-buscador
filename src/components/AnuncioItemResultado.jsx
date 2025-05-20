@@ -1,10 +1,25 @@
 "use client"
 
 export default function AnuncioItemResultado({
-    anuncio
 }) {
+    const anunciante = {
+        numero: "3507187007"
+    }
+    /* segun la hora el saludo, buenos dias, buenas tardes o buenas noches */
+    const hora = new Date().getHours()
+    let saludo = ""
+    if (hora >= 6 && hora < 12) {
+        saludo = "buenos días"
+    } else if (hora >= 12 && hora < 18) {
+        saludo = "buenas tardes"
+    } else {
+        saludo = "buenas noches"
+    }
+
+    const message = `Hola, ${saludo}. Me interesa la oferta de trabajo que vi en tu anuncio de *Cumbre Empleos*. ¿Podrías darme más información sobre cómo empezar?`
+
     return (
-        <div onClick={() => window.open("https://www.rendaz.shop", '_blank')} className="cursor-pointer p-4 border-[1px] border-gray-300 dark:border-gray-800 rounded-3xl mb-4 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200">
+        <div onClick={() => window.open(`https://wa.me/+57${anunciante.numero}?text=${message}`, '_blank')} className="cursor-pointer p-4 border-[1px] border-gray-300 dark:border-gray-800 rounded-3xl mb-4 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all duration-200">
             <div className="mb-3">
                 <span className="text-xs font-bold">Patrocinado</span>
             </div>
